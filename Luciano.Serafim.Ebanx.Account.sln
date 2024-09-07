@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Luciano.Serafim.Ebanx.Account.Api", "Luciano.Serafim.Ebanx.Account.Api\Luciano.Serafim.Ebanx.Account.Api.csproj", "{013C3277-5525-4658-A2B5-879A154638C1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Luciano.Serafim.Ebanx.Account.Core", "Luciano.Serafim.Ebanx.Account.Core\Luciano.Serafim.Ebanx.Account.Core.csproj", "{EF17F2A5-1A55-4CF7-94B5-8793E7011016}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Luciano.Serafim.Ebanx.Account.Infrastructure", "Luciano.Serafim.Ebanx.Account.Infrastructure\Luciano.Serafim.Ebanx.Account.Infrastructure.csproj", "{79859B74-2D9A-4A1A-BCE3-042FA8EB9CCE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Luciano.Serafim.Ebanx.Account.Bootstrap", "Luciano.Serafim.Ebanx.Account.Bootstrap\Luciano.Serafim.Ebanx.Account.Bootstrap.csproj", "{BBDEF32D-3A65-4943-A2C7-BD28B014F11A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Luciano.Serafim.Ebanx.Account.Tests", "Luciano.Serafim.Ebanx.Account.Tests\Luciano.Serafim.Ebanx.Account.Tests.csproj", "{09704D1D-ABB9-4890-90C2-687A3DAD5124}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{013C3277-5525-4658-A2B5-879A154638C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{013C3277-5525-4658-A2B5-879A154638C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{013C3277-5525-4658-A2B5-879A154638C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{013C3277-5525-4658-A2B5-879A154638C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF17F2A5-1A55-4CF7-94B5-8793E7011016}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF17F2A5-1A55-4CF7-94B5-8793E7011016}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF17F2A5-1A55-4CF7-94B5-8793E7011016}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF17F2A5-1A55-4CF7-94B5-8793E7011016}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79859B74-2D9A-4A1A-BCE3-042FA8EB9CCE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79859B74-2D9A-4A1A-BCE3-042FA8EB9CCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79859B74-2D9A-4A1A-BCE3-042FA8EB9CCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79859B74-2D9A-4A1A-BCE3-042FA8EB9CCE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BBDEF32D-3A65-4943-A2C7-BD28B014F11A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBDEF32D-3A65-4943-A2C7-BD28B014F11A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBDEF32D-3A65-4943-A2C7-BD28B014F11A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BBDEF32D-3A65-4943-A2C7-BD28B014F11A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{09704D1D-ABB9-4890-90C2-687A3DAD5124}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09704D1D-ABB9-4890-90C2-687A3DAD5124}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09704D1D-ABB9-4890-90C2-687A3DAD5124}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09704D1D-ABB9-4890-90C2-687A3DAD5124}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

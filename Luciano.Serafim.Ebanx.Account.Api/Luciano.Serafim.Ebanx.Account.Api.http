@@ -1,0 +1,6 @@
+@Luciano.Serafim.Ebanx.Account.Api_HostAddress = http://localhost:5163
+
+GET {{Luciano.Serafim.Ebanx.Account.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
