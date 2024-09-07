@@ -1,0 +1,11 @@
+services:  
+  mongodb:
+    image: mongodb/mongodb-community-server:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - './.data:/data/db'
+  redis:
+    image: redis/redis-stack-server:latest
+    ports: 
+      - "6379:6379"     
