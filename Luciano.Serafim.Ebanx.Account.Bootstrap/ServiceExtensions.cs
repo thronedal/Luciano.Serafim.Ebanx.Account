@@ -89,8 +89,8 @@ public static class ServiceExtensions
 
     public static IServiceCollection AddEbanxServices(this IServiceCollection services)
     {
-        services.AddScoped<IAccountService,AccountService>();
-        services.AddScoped<IEventService,EventService>();
+        services.AddSingleton<IAccountService,AccountService>();
+        services.AddSingleton<IEventService,EventService>();
 
         return services;
     }
