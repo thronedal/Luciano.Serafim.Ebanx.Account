@@ -31,6 +31,7 @@ public class RunWithdrawUseCaseTests
         var response = await mediator.Send(command);
 
         Assert.NotNull(response);
+        Assert.Equal(originId - amount, response.GetResponseObject().Origin.Balance);
     }
 
     //# Withdraw from non-existing account

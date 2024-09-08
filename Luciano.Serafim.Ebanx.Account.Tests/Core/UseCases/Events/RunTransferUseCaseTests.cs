@@ -34,6 +34,8 @@ public class RunTransferUseCaseTests
         var response = await mediator.Send(command);
 
         Assert.NotNull(response);
+        Assert.Equal(originId - amount, response.GetResponseObject().Origin.Balance);        
+        Assert.Equal(destinationId + amount, response.GetResponseObject().Destination.Balance);
     }
 
     //# Transfer from non-existing account

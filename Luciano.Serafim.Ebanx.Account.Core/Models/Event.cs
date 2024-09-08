@@ -1,3 +1,5 @@
+using Luciano.Serafim.Ebanx.Account.Core.Exceptions;
+
 namespace Luciano.Serafim.Ebanx.Account.Core.Models;
 
 /// <summary>
@@ -12,10 +14,9 @@ public class Event
         Ocurrence = ocurrence;
         AccountId = accountId;
 
-        var valid = amount > 0;
-        if (!valid)
+        if (amount <= 0)
         {
-            throw new Exception("Amount should be higher than 0 (zero)");
+            throw new ValueObjectValidationException("400", amount.ToString(), nameof(Amount) );
         }
     }
 

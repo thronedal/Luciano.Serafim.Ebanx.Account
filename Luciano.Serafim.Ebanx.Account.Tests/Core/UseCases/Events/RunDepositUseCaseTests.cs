@@ -30,6 +30,7 @@ public class RunDepositUseCaseTests
         var response = await mediator.Send(command);
 
         Assert.NotNull(response);
+        Assert.Equal(amount, response.GetResponseObject().Destination.Balance);
     }
 
     //# Deposit into existing account
@@ -42,6 +43,7 @@ public class RunDepositUseCaseTests
         var response = await mediator.Send(command);
 
         Assert.NotNull(response);
+        Assert.Equal(destinationId + amount, response.GetResponseObject().Destination.Balance);
     }
 
 }
