@@ -26,7 +26,7 @@ public class RunWithdrawUseCaseTests
     [InlineData(50, 30)]
     public async Task RunWithdraw_Success(int originId, double amount)
     {
-        WithdrawCommand command = new() { OriginId = originId, Amount = amount };
+        WithdrawCommand command = new(originId, amount );
 
         var response = await mediator.Send(command);
 
@@ -38,7 +38,7 @@ public class RunWithdrawUseCaseTests
     [InlineData(5000, 30)]
     public async Task RunWithdraw_NonExistingOrigin(int originId, double amount)
     {
-        WithdrawCommand command = new() { OriginId = originId, Amount = amount };
+        WithdrawCommand command = new(originId, amount );
 
         await Assert.ThrowsAsync<ObjectNotFoundException>(async () => await mediator.Send(command));
     }
@@ -48,7 +48,7 @@ public class RunWithdrawUseCaseTests
     [InlineData(5, 30)]
     public async Task RunWithdraw_InsuficientFunds(int originId, double amount)
     {
-        WithdrawCommand command = new() { OriginId = originId, Amount = amount };
+        WithdrawCommand command = new( originId, amount );
 
         await Assert.ThrowsAsync<BussinessRuleException>(async () => await mediator.Send(command));
     }

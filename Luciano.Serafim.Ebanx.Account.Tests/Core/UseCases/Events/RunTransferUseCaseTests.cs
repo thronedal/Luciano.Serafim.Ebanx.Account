@@ -29,7 +29,7 @@ public class RunTransferUseCaseTests
     [InlineData(50, 90, 30)]
     public async Task RunTransfer_Success(int originId, int destinationId, double amount)
     {
-        TransferCommand command = new(){OriginId = originId, DestinationId = destinationId, Amount = amount};
+        TransferCommand command = new( originId, destinationId, amount);
 
         var response = await mediator.Send(command);
 
@@ -41,7 +41,7 @@ public class RunTransferUseCaseTests
     [InlineData(5000, 90, 30)]
     public async Task RunTransfer_NonExistingOrigin(int originId, int destinationId, double amount)
     {
-        TransferCommand command = new(){OriginId = originId, DestinationId = destinationId, Amount = amount};
+        TransferCommand command = new(originId, destinationId, amount);
 
         await Assert.ThrowsAsync<ObjectNotFoundException>(async () => await mediator.Send(command));
     }
@@ -50,7 +50,7 @@ public class RunTransferUseCaseTests
     [InlineData(70, 5000, 30)]
     public async Task RunTransfer_NonExistingDestination(int originId, int destinationId, double amount)
     {
-        TransferCommand command = new(){OriginId = originId, DestinationId = destinationId, Amount = amount};
+        TransferCommand command = new( originId, destinationId, amount);
 
         await Assert.ThrowsAsync<ObjectNotFoundException>(async () => await mediator.Send(command));
     }
@@ -60,7 +60,7 @@ public class RunTransferUseCaseTests
     [InlineData(5, 70, 30)]
     public async Task RunTransfer_InsuficientFunds(int originId, int destinationId, double amount)
     {
-        TransferCommand command = new(){OriginId = originId, DestinationId = destinationId, Amount = amount};
+        TransferCommand command = new( originId, destinationId, amount);
 
         await Assert.ThrowsAsync<BussinessRuleException>(async () => await mediator.Send(command));
     }

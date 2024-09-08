@@ -28,7 +28,7 @@ public class GetBalanceUseCaseTests
     [Fact]
     public async Task GetBalance_NonExistingAccount()
     {
-        GetBalanceQuery query = new() { AccountId = 1100 };
+        GetBalanceQuery query = new( 1100 );
 
         await Assert.ThrowsAsync<ObjectNotFoundException>(async () => await mediator.Send(query));
     }
@@ -40,7 +40,7 @@ public class GetBalanceUseCaseTests
     [InlineData(87, 87)]
     public async Task GetBalance_ExistingAccount(int accountId, double balance)
     {
-        GetBalanceQuery query = new() { AccountId = accountId };
+        GetBalanceQuery query = new( accountId );
 
         var response = await mediator.Send(query);
 
