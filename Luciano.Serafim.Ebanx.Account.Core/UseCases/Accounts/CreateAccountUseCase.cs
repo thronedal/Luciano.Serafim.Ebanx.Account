@@ -34,7 +34,7 @@ public class CreateAccountUseCase : IRequestHandler<CreateAccountCommand, Respon
             account = await accountService.CreateAccount(account);
 
             //consolidate initial balance (0)
-            AccountConsolidatedBalance consolidatedBalance = await accountService.ConsolidateBalance(account.Id, DateOnly.FromDateTime(DateTime.UtcNow), 0.0);
+            AccountConsolidatedBalance consolidatedBalance = await accountService.ConsolidateBalance(account, DateOnly.FromDateTime(DateTime.UtcNow), 0.0);
 
             //commits transaction
 

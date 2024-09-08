@@ -45,9 +45,9 @@ public static class TestHelper
             return account;
         };     
 
-        var consolidateBalance = (int accountId, DateOnly date, double balance) =>
+        var consolidateBalance = (Account.Core.Models.Account account, DateOnly date, double balance) =>
         {
-            var consolidated = new AccountConsolidatedBalance(new Account.Core.Models.Account(accountId, accountId.ToString()), DateOnly.FromDateTime(DateTime.UtcNow), balance);
+            var consolidated = new AccountConsolidatedBalance(account, DateOnly.FromDateTime(DateTime.UtcNow), balance);
             consolidatedBalances.Add(consolidated);
 
             return consolidated;
@@ -71,7 +71,7 @@ public static class TestHelper
                         service.CreateAccount(Arg.Any<Account.Core.Models.Account>()).Returns(call => createAccount(call.ArgAt<Account.Core.Models.Account>(0)));
 
                         //consolidate balance
-                        service.ConsolidateBalance(Arg.Any<int>(),Arg.Any<DateOnly>(),Arg.Any<double>()).Returns(call => consolidateBalance(call.ArgAt<int>(0),call.ArgAt<DateOnly>(1),call.ArgAt<double>(2)));
+                        service.ConsolidateBalance(Arg.Any<Account.Core.Models.Account>(),Arg.Any<DateOnly>(),Arg.Any<double>()).Returns(call => consolidateBalance(call.ArgAt<Account.Core.Models.Account>(0), call.ArgAt<DateOnly>(1),call.ArgAt<double>(2)));
 
                         //AccountExists
                         service.AccountExists(Arg.Any<int>()).Returns(call => accounts.Exists(a => a.Id == call.ArgAt<int>(0)));

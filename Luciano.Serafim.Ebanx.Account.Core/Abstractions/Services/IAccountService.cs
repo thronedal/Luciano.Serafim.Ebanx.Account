@@ -50,5 +50,5 @@ public interface IAccountService
     /// <param name="id"></param>
     /// <param name="v"></param>
     /// <returns></returns>
-    Task<AccountConsolidatedBalance> ConsolidateBalance(int accountId, DateOnly date, double balance);
+    Task<AccountConsolidatedBalance> ConsolidateBalance(Models.Account account, DateOnly date, double balance);
 }

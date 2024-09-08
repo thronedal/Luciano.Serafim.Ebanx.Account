@@ -5,8 +5,12 @@ using Luciano.Serafim.Ebanx.Account.Bootstrap.Filters;
 using Luciano.Serafim.Ebanx.Account.Core.Abstractions.Services;
 using Luciano.Serafim.Ebanx.Account.Core.Models;
 using Luciano.Serafim.Ebanx.Account.Infrastructure;
+using Luciano.Serafim.Ebanx.Account.Infrastructure.MongoDb;
 using Microsoft.AspNetCore.HttpLogging;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MongoDB.Driver;
+using MongoDB.Driver.Core.Configuration;
 
 namespace Luciano.Serafim.Ebanx.Account.Bootstrap;
 
@@ -87,15 +91,39 @@ public static class ServiceExtensions
         return services;
     }
 
-    public static IServiceCollection AddEbanxServices(this IServiceCollection services)
+    public static IServiceCollection AddEbanxServices(this IServiceCollection services, ConfigurationManager configuration)
     {
-        services.AddSingleton<IAccountService,AccountService>();
-        services.AddSingleton<IEventService,EventService>();
+        var databaseSettings = configuration.GetSection("MongoDb").Get<MongoDBSettings>();
+
+        if (databaseSettings is null)
+        {
+            services.AddSingleton<IAccountService, Infrastructure.AccountService>();
+            services.AddSingleton<IEventService, Infrastructure.EventService>();
+        }
+        else
+        {
+            services.Configure<MongoDBSettings>(configuration.GetSection("MongoDb"));
+            services.AddSingleton<IMongoClient>(sp =>
+            {
+                var settings = new MongoClientSettings()
+                {
+                    Scheme = ConnectionStringScheme.MongoDB,
+                    Server = new MongoServerAddress(databaseSettings!.Host, databaseSettings.Port)
+                };
+
+                return new MongoClient(settings);
+            });
+
+            services.AddSingleton<IAccountService, Infrastructure.MongoDb.AccountService>();
+            services.AddSingleton<IEventService, Infrastructure.MongoDb.EventService>();
+
+            Mapping.MapEntities();
+        }
 
         return services;
     }
 
-    public static IServiceCollection AddEbanxAll(this IServiceCollection services)
+    public static IServiceCollection AddEbanxAll(this IServiceCollection services, ConfigurationManager configuration)
     {
         services
             .AddEbanxMediatR()
@@ -105,7 +133,7 @@ public static class ServiceExtensions
             .AddEbanxControllers()
             .AddEbanxSwagger()
             .AddEbanxResponse()
-            .AddEbanxServices();
+            .AddEbanxServices(configuration);
 
         return services;
     }

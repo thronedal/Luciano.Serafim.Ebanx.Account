@@ -37,9 +37,9 @@ public class AccountService : IAccountService
     }
 
     /// <inheritdoc/>
-    public async Task<AccountConsolidatedBalance> ConsolidateBalance(int accountId, DateOnly date, double balance)
+    public async Task<AccountConsolidatedBalance> ConsolidateBalance(Core.Models.Account account, DateOnly date, double balance)
     {
-        var consolidated = new AccountConsolidatedBalance(new Core.Models.Account(accountId, accountId.ToString()), DateOnly.FromDateTime(DateTime.UtcNow), balance);
+        var consolidated = new AccountConsolidatedBalance(account, DateOnly.FromDateTime(DateTime.UtcNow), balance);
         consolidatedBalances.Add(consolidated);
 
         return await Task.FromResult(consolidated);

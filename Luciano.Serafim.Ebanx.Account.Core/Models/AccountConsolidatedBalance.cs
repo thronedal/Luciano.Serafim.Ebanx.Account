@@ -16,6 +16,11 @@ public class AccountConsolidatedBalance
     }
 
     /// <summary>
+    /// Id
+    /// </summary>
+    public string Id { get; set; } = string.Empty;
+
+    /// <summary>
     /// Account information
     /// </summary>
     public Account Account { get; private set; }
