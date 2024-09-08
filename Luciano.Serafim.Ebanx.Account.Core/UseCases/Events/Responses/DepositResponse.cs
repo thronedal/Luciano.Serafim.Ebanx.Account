@@ -5,13 +5,13 @@ namespace Luciano.Serafim.Ebanx.Account.Core.UseCases.Events;
 /// </summary>
 public class DepositResponse
 {
-    /// <summary>
-    /// Balance of the origin account
-    /// </summary>
-    public AccountBalanceResponse? Origin { get; set; }
+    public DepositResponse(AccountBalanceResponse destination)
+    {
+        Destination = destination;
+    }
 
     /// <summary>
     /// Balance of the destination account
     /// </summary>
-    public AccountBalanceResponse? Destination { get; set; }
+    public AccountBalanceResponse Destination { get; internal set; }
 }

@@ -54,8 +54,8 @@ public class RunDepositUseCase : IRequestHandler<DepositCommand, Response<Deposi
         }
 
         //get destination balance
-        var destinationBalance = (await mediator.Send(new GetBalanceQuery() { AccountId = request.DestinationId })).GetResponseObject();
-        response.SetResponsePayload(new DepositResponse() { Destination = new AccountBalanceResponse() { Id = request.DestinationId, Balance = destinationBalance } });
+        var destinationBalance = (await mediator.Send(new GetBalanceQuery(request.DestinationId))).GetResponseObject();
+        response.SetResponsePayload(new DepositResponse(new AccountBalanceResponse(request.DestinationId, destinationBalance)));
 
         return response;
     }

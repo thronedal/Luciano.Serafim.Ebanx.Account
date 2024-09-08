@@ -37,7 +37,7 @@ public class RunWithdrawUseCase : IRequestHandler<WithdrawCommand, Response<With
             }
 
             //calculate balance
-            var balance = (await mediator.Send(new GetBalanceQuery() { AccountId = origin.Id })).GetResponseObject();
+            var balance = (await mediator.Send(new GetBalanceQuery(origin.Id))).GetResponseObject();
 
             //validate origin balance
             if (balance < request.Amount)
@@ -63,8 +63,8 @@ public class RunWithdrawUseCase : IRequestHandler<WithdrawCommand, Response<With
         }
 
         //get origin balance
-        var originBalance = (await mediator.Send(new GetBalanceQuery() { AccountId = request.OriginId })).GetResponseObject();
-        response.SetResponsePayload(new WithdrawResponse(){ Origin = new AccountBalanceResponse() { Id = request.OriginId, Balance = originBalance}});
+        var originBalance = (await mediator.Send(new GetBalanceQuery(request.OriginId))).GetResponseObject();
+        response.SetResponsePayload(new WithdrawResponse(new AccountBalanceResponse(request.OriginId, originBalance)));
 
         return await Task.FromResult(response);
     }

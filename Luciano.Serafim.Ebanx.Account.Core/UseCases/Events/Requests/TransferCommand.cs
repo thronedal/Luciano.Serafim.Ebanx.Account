@@ -5,20 +5,27 @@ namespace Luciano.Serafim.Ebanx.Account.Core.UseCases.Events;
 
 public class TransferCommand : IRequest<Response<TransferResponse>>
 {
+    public TransferCommand(int originId, int destinationId, double amount)
+    {
+        OriginId = originId;
+        DestinationId = destinationId;
+        Amount = amount;
+    }
+
     /// <summary>
     /// Origin account Id
     /// </summary>
-    public int OriginId { get; set; }
+    public int OriginId { get; internal set; }
 
     /// <summary>
     /// destination account Id
     /// </summary>
-    public int DestinationId { get; set; }
+    public int DestinationId { get; internal set; }
 
     /// <summary>
     /// Operation Amount
     /// </summary>
-    public double Amount { get; set; }
+    public double Amount { get; internal set; }
 
     /// <summary>
     /// Converts the base type <see cref="TransferCommand"/> to <see cref="Event[]"/>.

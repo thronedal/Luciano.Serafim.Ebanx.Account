@@ -5,5 +5,14 @@ namespace Luciano.Serafim.Ebanx.Account.Core.UseCases.Accounts;
 
 public class GetBalanceQuery: IRequest<Response<double>>
 {
-    public int AccountId { get; set; }
+
+    public GetBalanceQuery(int accountId)
+    {
+        AccountId = accountId;
+    }
+
+    /// <summary>
+    /// Account Id
+    /// </summary>
+    public int AccountId { get; internal set; }
 }

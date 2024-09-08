@@ -5,8 +5,13 @@ namespace Luciano.Serafim.Ebanx.Account.Core.UseCases.Events;
 /// </summary>
 public class WithdrawResponse
 {
+    public WithdrawResponse(AccountBalanceResponse origin)
+    {
+        Origin = origin;
+    }
+
     /// <summary>
     /// Balance of the origin account
     /// </summary>
-    public AccountBalanceResponse? Origin { get; set; }
+    public AccountBalanceResponse Origin { get; internal set; }
 }

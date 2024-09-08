@@ -22,7 +22,7 @@ public class DepositCommand : IRequest<Response<DepositResponse>>
     /// <summary>
     /// amount to be deposited
     /// </summary>
-    public double Amount { get; set; }
+    public double Amount { get; internal set; }
 
     /// <summary>
     /// Converts the base type <see cref="DepositCommand"/> to <see cref="Event"/>.

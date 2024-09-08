@@ -13,7 +13,7 @@ public interface IAccountService
     /// </summary>
     /// <param name="accountId">account Id</param>
     /// <returns></returns>
-    Task<AccountConsolidatedBalance?> GetLastConsolidatedBalance(int accountId);
+    Task<AccountConsolidatedBalance> GetLastConsolidatedBalance(int accountId);
 
     
     /// <summary>

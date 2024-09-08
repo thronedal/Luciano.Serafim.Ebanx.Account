@@ -60,11 +60,11 @@ public static class TestHelper
                         //account exists
                         service.GetAccountById(Arg.Any<int>()).Returns(call => accounts.Where(a => a.Id == call.ArgAt<int>(0)).FirstOrDefault());
 
-                        //return the last consolidated balance 
+                        //return the last consolidated balance, or a consolidate data of DateOnly.MinValue and Balance 0 if there none 
                         service.GetLastConsolidatedBalance(Arg.Any<int>()).Returns(call => 
                             consolidatedBalances.Where(c => c.Account.Id == call.ArgAt<int>(0) 
                                                         && c.BalanceDate == consolidatedBalances.Where(c => c.Account.Id == call.ArgAt<int>(0)).Max(m => m.BalanceDate))
-                                .FirstOrDefault()
+                                .FirstOrDefault(new AccountConsolidatedBalance(new Account.Core.Models.Account(call.ArgAt<int>(0), call.ArgAt<int>(0).ToString()), DateOnly.MinValue, 0))
                             );
 
                         //create account

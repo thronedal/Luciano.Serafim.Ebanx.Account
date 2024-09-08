@@ -47,7 +47,7 @@ public class RunTransferUseCase : IRequestHandler<TransferCommand, Response<Tran
             }
 
             //calculate balance
-            var balance = (await mediator.Send(new GetBalanceQuery() { AccountId = origin.Id })).GetResponseObject();
+            var balance = (await mediator.Send(new GetBalanceQuery(origin.Id))).GetResponseObject();
 
             //validate origin balance
             if (balance < request.Amount)
@@ -79,16 +79,12 @@ public class RunTransferUseCase : IRequestHandler<TransferCommand, Response<Tran
         }
 
         //get origin balance
-        var originBalance = (await mediator.Send(new GetBalanceQuery() { AccountId = request.OriginId })).GetResponseObject();
+        var originBalance = (await mediator.Send(new GetBalanceQuery(request.OriginId))).GetResponseObject();
 
         //get destination balance
-        var destinationBalance = (await mediator.Send(new GetBalanceQuery() { AccountId = request.DestinationId })).GetResponseObject();
+        var destinationBalance = (await mediator.Send(new GetBalanceQuery(request.DestinationId))).GetResponseObject();
 
-        TransferResponse dto = new()
-        {
-            Origin = new() { Id = request.OriginId, Balance = originBalance },
-            Destination = new() { Id = request.DestinationId, Balance = destinationBalance }
-        };
+        TransferResponse dto = new(new(request.OriginId, originBalance), new(request.DestinationId, destinationBalance));
 
         response.SetResponsePayload(dto);
 

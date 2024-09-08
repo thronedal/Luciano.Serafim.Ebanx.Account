@@ -13,7 +13,7 @@ public class CreateAccountCommand : IRequest<Response<Models.Account>>
     /// <summary>
     /// Account id to be created
     /// </summary>
-    public int AccountId { get; private set; }
+    public int AccountId { get; internal set; }
 
     /// <summary>
     /// Converts the base type <see cref="CreateAccountCommand"/> to <see cref="Event"/>.

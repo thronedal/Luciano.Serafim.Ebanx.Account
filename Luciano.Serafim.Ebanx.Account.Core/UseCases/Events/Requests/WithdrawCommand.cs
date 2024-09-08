@@ -8,15 +8,21 @@ namespace Luciano.Serafim.Ebanx.Account.Core.UseCases.Events;
 /// </summary>
 public class WithdrawCommand : IRequest<Response<WithdrawResponse>>
 {
+    public WithdrawCommand(int originId, double amount)
+    {
+        OriginId = originId;
+        Amount = amount;
+    }
+
     /// <summary>
     /// Origin account Id
     /// </summary>
-    public int OriginId { get; set; }
+    public int OriginId { get; internal set; }
 
     /// <summary>
     /// Amount to withdraw
     /// </summary>
-    public double Amount { get; set; }
+    public double Amount { get; internal set; }
 
     /// <summary>
     /// Converts the base type <see cref="WithdrawCommand"/> to <see cref="Event"/>.
