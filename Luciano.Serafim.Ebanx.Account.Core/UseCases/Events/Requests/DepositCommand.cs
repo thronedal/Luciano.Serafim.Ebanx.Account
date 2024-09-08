@@ -30,6 +30,6 @@ public class DepositCommand : IRequest<Response<DepositResponse>>
     /// <param name="command"><see cref="DepositCommand"/></param>
     public static explicit operator Event(DepositCommand command)
     {
-        return new Event(EventOperation.Withdraw, command.Amount, DateTime.UtcNow, command.DestinationId);
+        return new Event(EventOperation.Deposit, command.Amount, DateTime.UtcNow, command.DestinationId);
     }    
 }

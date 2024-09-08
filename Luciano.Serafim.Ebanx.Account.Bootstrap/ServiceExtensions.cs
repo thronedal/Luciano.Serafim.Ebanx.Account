@@ -2,7 +2,9 @@ using System;
 using System.Reflection;
 using System.Text.Json.Serialization;
 using Luciano.Serafim.Ebanx.Account.Bootstrap.Filters;
+using Luciano.Serafim.Ebanx.Account.Core.Abstractions.Services;
 using Luciano.Serafim.Ebanx.Account.Core.Models;
+using Luciano.Serafim.Ebanx.Account.Infrastructure;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -80,14 +82,15 @@ public static class ServiceExtensions
 
     public static IServiceCollection AddEbanxResponse(this IServiceCollection services)
     {
-        services.AddScoped(typeof(Response<>));
+        services.AddScoped(typeof(Response<>), typeof(Response<>));
 
         return services;
     }
 
     public static IServiceCollection AddEbanxServices(this IServiceCollection services)
     {
-        //services.AddScoped(typeof(Response<>));
+        services.AddScoped<IAccountService,AccountService>();
+        services.AddScoped<IEventService,EventService>();
 
         return services;
     }
@@ -99,6 +102,7 @@ public static class ServiceExtensions
             .AddLogging()
             .AddEbanxHttpLogging()
             .AddEbanxDistributedCache()
+            .AddEbanxControllers()
             .AddEbanxSwagger()
             .AddEbanxResponse()
             .AddEbanxServices();

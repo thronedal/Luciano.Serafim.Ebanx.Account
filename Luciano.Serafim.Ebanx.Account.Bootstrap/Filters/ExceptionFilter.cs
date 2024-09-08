@@ -1,4 +1,3 @@
-using System;
 using Luciano.Serafim.Ebanx.Account.Core.Exceptions.Abstractions;
 using Luciano.Serafim.Ebanx.Account.Core.Models;
 using Microsoft.AspNetCore.Http;
@@ -10,12 +9,10 @@ namespace Luciano.Serafim.Ebanx.Account.Bootstrap.Filters;
 
 public class ExceptionFilter : IExceptionFilter
 {
-    private readonly Response response;
     private readonly ILogger<ExceptionFilter> logger;
 
-    public ExceptionFilter(Response response, ILogger<ExceptionFilter> logger)
+    public ExceptionFilter(ILogger<ExceptionFilter> logger)
     {
-        this.response = response;
         this.logger = logger;
     }
 
@@ -25,28 +22,25 @@ public class ExceptionFilter : IExceptionFilter
         switch (context.Exception)
         {
             case IBadRequestException:
-                context.Result = new BadRequestObjectResult(response);
+                context.Result = new BadRequestObjectResult(0);
                 break;
             case INotFoundException:
-                context.Result = new NotFoundObjectResult(response);
+                context.Result = new NotFoundObjectResult(0);
                 break;
             case IConflictException:
-                context.Result = new ConflictObjectResult(response);
+                context.Result = new ConflictObjectResult(0);
                 break;
             case IUnprocessableContentException:
-                context.Result = new UnprocessableEntityObjectResult(response);
+                context.Result = new UnprocessableEntityObjectResult(0);
                 break;
             case IInternalServerErrorException:
-                context.Result = new ObjectResult(response)
+                context.Result = new ObjectResult(0)
                 {
                     StatusCode = StatusCodes.Status500InternalServerError
                 };
                 break;
             default:
-                var trackId = Guid.Parse(System.Diagnostics.Activity.Current?.RootId ?? Guid.Empty.ToString());
-                //TODO: substitute the message for a generic message
-                response.Errors.Add( new ErrorMessage(trackId, "-1", $"Unidentified error, contact suport and inform the tracking id:'{trackId}'"));
-                context.Result = new ObjectResult(response)
+                context.Result = new ObjectResult(0)
                 {
                     StatusCode = StatusCodes.Status500InternalServerError
                 };

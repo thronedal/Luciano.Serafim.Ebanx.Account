@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Luciano.Serafim.Ebanx.Account.Core\Luciano.Serafim.Ebanx.Account.Core.csproj" />
+    <ProjectReference Include="..\Luciano.Serafim.Ebanx.Account.Infrastructure\Luciano.Serafim.Ebanx.Account.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>

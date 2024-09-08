@@ -8,6 +8,13 @@ namespace Luciano.Serafim.Ebanx.Account.Core.Abstractions.Services;
 /// </summary>
 public interface IAccountService
 {
+
+    /// <summary>
+    /// initialize the app state, for testinf purposes when using in memory storage
+    /// </summary>
+    /// <returns></returns>
+    Task<bool> InitializeState();
+
     /// <summary>
     /// return the last consolidated balance for the account
     /// </summary>
