@@ -1,5 +1,6 @@
 using Luciano.Serafim.Ebanx.Account.Core.Enums;
 using Luciano.Serafim.Ebanx.Account.Core.Models;
+using Luciano.Serafim.Ebanx.Account.Core.UseCases;
 using Luciano.Serafim.Ebanx.Account.Core.UseCases.Accounts;
 using Luciano.Serafim.Ebanx.Account.Core.UseCases.Events;
 using MediatR;
@@ -35,8 +36,8 @@ namespace Luciano.Serafim.Ebanx.Account.Api.Controllers
         {
             using (logger.BeginScope(this.GetType().Name))
             {
-                //var result = await mediator.Send((ResetAccountsCommand)request);
-                return await Task.FromResult(Ok("OK"));
+                var result = (await mediator.Send( new ResetAppStateCommand())).GetResponseObject();
+                return await Task.FromResult(Ok(result ? "OK" : "FAIL"));
             }
         }
 
