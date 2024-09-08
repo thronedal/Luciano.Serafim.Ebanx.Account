@@ -1,5 +1,7 @@
 using System;
 using Luciano.Serafim.Ebanx.Account.Core.Abstractions.Services;
+using Luciano.Serafim.Ebanx.Account.Core.Exceptions;
+using Luciano.Serafim.Ebanx.Account.Core.Helpers;
 using Luciano.Serafim.Ebanx.Account.Core.Models;
 using MediatR;
 
@@ -20,15 +22,13 @@ public class GetBalanceUseCase : IRequestHandler<GetBalanceQuery, Response<doubl
 
     public async Task<Response<double>> Handle(GetBalanceQuery request, CancellationToken cancellationToken)
     {   
-        var debitOperations = new []{EventOperation.OutgoingTransfer, EventOperation.Withdraw};
-
         //get account
         var account = await accountService.GetAccountById(request.AccountId);
 
         //account exists?
         if(account is null)
         {
-            throw new Exception("Account does not exists");
+            throw new ObjectNotFoundException("404", request.AccountId.ToString(), nameof(request.AccountId));
         }
 
         //get balance        
@@ -36,7 +36,7 @@ public class GetBalanceUseCase : IRequestHandler<GetBalanceQuery, Response<doubl
         var events = await eventService.GetEvetsAfter(account.Id, consolidatedBalance.BalanceDate.ToDateTime(new TimeOnly()));
 
         //calculate balance
-        var balance = consolidatedBalance.Balance + events.Sum(e => e.Amount * (debitOperations.Contains(e.Operation) ? -1 : 1));
+        var balance = BalanceHelper.CalculateBalance(consolidatedBalance.Balance, events);
 
         response.SetResponsePayload(balance);
 

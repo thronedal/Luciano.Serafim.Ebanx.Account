@@ -27,6 +27,8 @@ public abstract class Response
     /// indicates if the call was successful
     /// </summary>
     public bool IsValid { get => Errors.Count == 0; }
+
+    public int Status { get; set; }
 }
 
 public class Response<T> : Response

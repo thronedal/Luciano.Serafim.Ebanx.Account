@@ -21,5 +21,5 @@ public interface IAccountService
     /// </summary>
     /// <param name="accountId">account Id</param>
     /// <returns></returns>
-    Task<Models.Account> GetAccountById(int accountId);
+    Task<Models.Account?> GetAccountById(int accountId);
 }

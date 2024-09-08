@@ -6,4 +6,20 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="mediatr" Version="12.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Luciano.Serafim.Ebanx.Account.Core\Luciano.Serafim.Ebanx.Account.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="MediatR/" />
+  </ItemGroup>
+
 </Project>

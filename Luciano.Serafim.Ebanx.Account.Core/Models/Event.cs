@@ -5,26 +5,24 @@ namespace Luciano.Serafim.Ebanx.Account.Core.Models;
 /// </summary>
 public class Event
 {
-    public Event(EventOperation operation, double amount, DateTime ocurrence, Account account, Account? destination, Event? originEvent = null)
+    public Event(EventOperation operation, double amount, DateTime ocurrence, int accountId)
     {
         Operation = operation;
         Amount = amount;
         Ocurrence = ocurrence;
-        Account = account;
+        AccountId = accountId;
 
         var valid = amount > 0;
         if (!valid)
         {
             throw new Exception("Amount should be higher than 0 (zero)");
         }
-
-        OriginEvent = originEvent;
     }
 
     /// <summary>
     /// Identifies the Event
     /// </summary>
-    public string Id { get; private set; } = string.Empty;
+    public string Id { get; set; } = string.Empty;
 
     /// <summary>
     /// Operation type for the event
@@ -44,10 +42,10 @@ public class Event
     /// <summary>
     /// Source account for the event
     /// </summary>
-    public Account Account { get; private set; }
+    public int AccountId { get; private set; }
 
     /// <summary>
     /// related event that originate the current event
     /// </summary>
-    public Event? OriginEvent { get; private set; }
+    public string? OriginEventId { get; set; }
 }

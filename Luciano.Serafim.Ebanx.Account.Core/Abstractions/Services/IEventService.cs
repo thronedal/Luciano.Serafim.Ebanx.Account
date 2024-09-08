@@ -13,5 +13,5 @@ public interface IEventService
     /// <returns></returns>
     Task<IEnumerable<Event>> GetEvetsAfter(int accountId, DateTime initialDate);
 
-    Task<Event> CreateEvent(Models.Account account);
+    Task<Event> CreateEvent(Event account);
 }
