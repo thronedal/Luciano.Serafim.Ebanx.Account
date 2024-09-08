@@ -3,6 +3,7 @@ using Luciano.Serafim.Ebanx.Account.Core.Abstractions.Services;
 using Luciano.Serafim.Ebanx.Account.Core.Exceptions;
 using Luciano.Serafim.Ebanx.Account.Core.Models;
 using Luciano.Serafim.Ebanx.Account.Core.UseCases.Events;
+using Luciano.Serafim.Ebanx.Account.Tests.Utility;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
@@ -15,47 +16,9 @@ public class RunTransferUseCaseTests
 
     public RunTransferUseCaseTests()
     {
-        var createEvent = (Event @event) => {
-            return new Event(@event.Operation, @event.Amount, DateTime.UtcNow, @event.AccountId){Id = Guid.NewGuid().ToString()};
-        };
-
         var services = new ServiceCollection();
         var serviceProvider = services
-            .AddLogging()
-            .AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(TransferCommand).Assembly))
-            .AddScoped(_ =>
-            {
-                var service = Substitute.For<IAccountService>();
-
-                //account exists if id < 1000
-                service.GetAccountById(Arg.Is<int>(a => a < 1000)).Returns(call =>
-                    new Account.Core.Models.Account(call.ArgAt<int>(0), call.ArgAt<int>(0).ToString())
-                    );
-                //account does not exists if id >= 1000
-                service.GetAccountById(Arg.Is<int>(a => a >= 1000)).Returns(null as Account.Core.Models.Account);
-
-                //return the last consolidated balance (set the date for today, and the balance to the account id)
-                service.GetLastConsolidatedBalance(Arg.Any<int>()).Returns(call =>
-                    new AccountConsolidatedBalance(
-                        new Account.Core.Models.Account(call.ArgAt<int>(0), call.ArgAt<int>(0).ToString()),
-                        DateOnly.FromDateTime(DateTime.UtcNow),
-                        call.ArgAt<int>(0)
-                        )
-                    );
-
-                return service;
-            })            
-            .AddScoped(_ =>
-            {
-                var service = Substitute.For<IEventService>();
-
-                //returns a empty list of events
-                service.GetEvetsAfter(Arg.Any<int>(), Arg.Any<DateTime>()).Returns(Enumerable.Empty<Event>());
-                service.CreateEvent(Arg.Any<Event>()).Returns(call => createEvent(call.ArgAt<Event>(0)));
-
-                return service;
-            })
-            .AddScoped(typeof(Response<>), typeof(Response<>))            
+            .AddEbanxTest()
             .BuildServiceProvider();
 
         mediator = serviceProvider.GetRequiredService<IMediator>();

@@ -33,7 +33,7 @@ public class GetBalanceUseCase : IRequestHandler<GetBalanceQuery, Response<doubl
 
         //get balance        
         var consolidatedBalance =  await accountService.GetLastConsolidatedBalance(request.AccountId);
-        var events = await eventService.GetEvetsAfter(account.Id, consolidatedBalance.BalanceDate.ToDateTime(new TimeOnly()));
+        var events = await eventService.GetEventsAfter(account.Id, consolidatedBalance.BalanceDate.ToDateTime(new TimeOnly()));
 
         //calculate balance
         var balance = BalanceHelper.CalculateBalance(consolidatedBalance.Balance, events);

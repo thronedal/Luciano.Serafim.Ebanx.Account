@@ -8,14 +8,14 @@ using MediatR;
 
 namespace Luciano.Serafim.Ebanx.Account.Core.UseCases.Events;
 
-public class RunTransferUseCase : IRequestHandler<TransferCommand, Response<TransferResultDto>>
+public class RunTransferUseCase : IRequestHandler<TransferCommand, Response<TransferResponse>>
 {
-    private readonly Response<TransferResultDto> response;
+    private readonly Response<TransferResponse> response;
     private readonly IAccountService accountService;
     private readonly IEventService eventService;
     private readonly IMediator mediator;
 
-    public RunTransferUseCase(Response<TransferResultDto> response, IAccountService accountService, IEventService eventService, IMediator mediator)
+    public RunTransferUseCase(Response<TransferResponse> response, IAccountService accountService, IEventService eventService, IMediator mediator)
     {
         this.response = response;
         this.accountService = accountService;
@@ -23,7 +23,7 @@ public class RunTransferUseCase : IRequestHandler<TransferCommand, Response<Tran
         this.mediator = mediator;
     }
 
-    public async Task<Response<TransferResultDto>> Handle(TransferCommand request, CancellationToken cancellationToken)
+    public async Task<Response<TransferResponse>> Handle(TransferCommand request, CancellationToken cancellationToken)
     {
         //start transaction (should account be locked ??)
         try
@@ -52,7 +52,7 @@ public class RunTransferUseCase : IRequestHandler<TransferCommand, Response<Tran
             //validate origin balance
             if (balance < request.Amount)
             {
-                throw new BussinessRuleException($"Balance $'{balance}' should be higher than the operation amount $'{request.Amount}'");
+                throw new BussinessRuleException($"Balance '{balance:C2}' should be higher than the operation amount '${request.Amount:C2}'");
             }
 
             var transfeEvents = (Event[])request;
@@ -84,7 +84,7 @@ public class RunTransferUseCase : IRequestHandler<TransferCommand, Response<Tran
         //get destination balance
         var destinationBalance = (await mediator.Send(new GetBalanceQuery() { AccountId = request.DestinationId })).GetResponseObject();
 
-        TransferResultDto dto = new()
+        TransferResponse dto = new()
         {
             Origin = new() { Id = request.OriginId, Balance = originBalance },
             Destination = new() { Id = request.DestinationId, Balance = destinationBalance }

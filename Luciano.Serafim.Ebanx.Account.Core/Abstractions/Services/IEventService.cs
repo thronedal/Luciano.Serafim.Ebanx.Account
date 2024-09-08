@@ -11,7 +11,7 @@ public interface IEventService
     /// <param name="accountId"></param>
     /// <param name="initialDate"></param>
     /// <returns></returns>
-    Task<IEnumerable<Event>> GetEvetsAfter(int accountId, DateTime initialDate);
+    Task<IEnumerable<Event>> GetEventsAfter(int accountId, DateTime initialDate);
 
     Task<Event> CreateEvent(Event account);
 }

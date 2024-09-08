@@ -3,7 +3,7 @@ using MediatR;
 
 namespace Luciano.Serafim.Ebanx.Account.Core.UseCases.Events;
 
-public class TransferCommand : IRequest<Response<TransferResultDto>>
+public class TransferCommand : IRequest<Response<TransferResponse>>
 {
     /// <summary>
     /// Origin account Id
@@ -21,9 +21,9 @@ public class TransferCommand : IRequest<Response<TransferResultDto>>
     public double Amount { get; set; }
 
     /// <summary>
-    /// Converts the base type <see cref="TransferCommand"/> to <see cref="IEnumerable<Event>"/>.
+    /// Converts the base type <see cref="TransferCommand"/> to <see cref="Event[]"/>.
     /// </summary>
-    /// <param name="model"><see cref="SimulationRequest"/></param>
+    /// <param name="command"><see cref="TransferCommand"/></param>
     public static explicit operator Event[](TransferCommand command)
     {
         var events = new Event[]
@@ -32,7 +32,6 @@ public class TransferCommand : IRequest<Response<TransferResultDto>>
             new Event(EventOperation.IncommingTransfer, command.Amount, DateTime.UtcNow, command.DestinationId)
         };
 
-        return events;    
-        
+        return events;           
     }
 }
