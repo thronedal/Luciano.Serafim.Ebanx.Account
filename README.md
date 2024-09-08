@@ -14,22 +14,6 @@ A solução foi criada utilizando os conceitos de clean architeture, e a divisã
 - Bootstrap: projeto transversal que efetua a ligação entre as camandas;
 - Tests: testes unitários.
 
-
-## Possíveis problemas
-
-Tive um erro ao utilizar volume para o Mongo no compose, o mongo não inicializava por problema de permissão para gravação
-
-utilizando Ubunto 22.04.3
-
-```yaml
-  mongodb:
-    image: mongodb/mongodb-community-server:latest
-    ports:
-      - "27017:27017"
-    volumes:
-      - './.data:/data/db'
-```
-
 ## executar através do compose
 
 A api deve inciar na seguinte [url](http://localhost:8080/swagger)
@@ -54,6 +38,21 @@ Para utilizar o mongoDb utilize a configuração, a ausencia da chave "MongoDb" 
     "DatabaseName": "Ebanx"
   }
 }
+```
+
+## Possíveis problemas
+
+Tive um erro ao utilizar volume para o Mongo no compose, o mongo não inicializava por problema de permissão para gravação
+
+utilizando Ubunto 22.04.3
+
+```yaml
+  mongodb:
+    image: mongodb/mongodb-community-server:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - './.data:/data/db'
 ```
 
 ### extraído do log
