@@ -26,7 +26,7 @@ public class RunTransferUseCaseTests
 
     //# Transfer from existing account
     [Theory]
-    [InlineData(50, 100, 30)]
+    [InlineData(50, 90, 30)]
     public async Task RunTransfer_Success(int originId, int destinationId, double amount)
     {
         TransferCommand command = new(){OriginId = originId, DestinationId = destinationId, Amount = amount};
@@ -38,7 +38,7 @@ public class RunTransferUseCaseTests
 
     //# Transfer from non-existing account
     [Theory]
-    [InlineData(5000, 100, 30)]
+    [InlineData(5000, 90, 30)]
     public async Task RunTransfer_NonExistingOrigin(int originId, int destinationId, double amount)
     {
         TransferCommand command = new(){OriginId = originId, DestinationId = destinationId, Amount = amount};
@@ -47,7 +47,7 @@ public class RunTransferUseCaseTests
     }
     //# Transfer to non-existing account
     [Theory]
-    [InlineData(100, 5000, 30)]
+    [InlineData(70, 5000, 30)]
     public async Task RunTransfer_NonExistingDestination(int originId, int destinationId, double amount)
     {
         TransferCommand command = new(){OriginId = originId, DestinationId = destinationId, Amount = amount};
@@ -57,7 +57,7 @@ public class RunTransferUseCaseTests
 
     //# Transfer with insuficient funds
     [Theory]
-    [InlineData(5, 100, 30)]
+    [InlineData(5, 70, 30)]
     public async Task RunTransfer_InsuficientFunds(int originId, int destinationId, double amount)
     {
         TransferCommand command = new(){OriginId = originId, DestinationId = destinationId, Amount = amount};

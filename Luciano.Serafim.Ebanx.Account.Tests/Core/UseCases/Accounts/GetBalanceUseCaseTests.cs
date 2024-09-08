@@ -35,9 +35,9 @@ public class GetBalanceUseCaseTests
 
     //# Get balance for existing account
     [Theory]
-    [InlineData(50, 50)]
-    [InlineData(150, 150)]
-    [InlineData(250, 250)]
+    [InlineData(1, 1)]
+    [InlineData(30, 30)]
+    [InlineData(87, 87)]
     public async Task GetBalance_ExistingAccount(int accountId, double balance)
     {
         GetBalanceQuery query = new() { AccountId = accountId };

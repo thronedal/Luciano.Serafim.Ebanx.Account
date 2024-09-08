@@ -3,6 +3,33 @@ using MediatR;
 
 namespace Luciano.Serafim.Ebanx.Account.Core.UseCases.Events;
 
-public class DepositCommand : IRequest<Response<Event>>
+/// <summary>
+/// DepositCommand
+/// </summary>
+public class DepositCommand : IRequest<Response<DepositResponse>>
 {
+    public DepositCommand(int destinationId, double amount)
+    {
+        DestinationId = destinationId;
+        Amount = amount;
+    }
+    
+    /// <summary>
+    /// Id for destination account
+    /// </summary>
+    public int DestinationId { get; internal set; }
+
+    /// <summary>
+    /// amount to be deposited
+    /// </summary>
+    public double Amount { get; set; }
+
+    /// <summary>
+    /// Converts the base type <see cref="DepositCommand"/> to <see cref="Event"/>.
+    /// </summary>
+    /// <param name="command"><see cref="DepositCommand"/></param>
+    public static explicit operator Event(DepositCommand command)
+    {
+        return new Event(EventOperation.Withdraw, command.Amount, DateTime.UtcNow, command.DestinationId);
+    }    
 }
