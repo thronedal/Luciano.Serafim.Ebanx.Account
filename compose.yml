@@ -1,4 +1,14 @@
 services:  
+  liveorder-api:
+    image: ebanx-api:latest
+    build:
+      context: .
+      dockerfile: Luciano.Serafim.Ebanx.Account.Api/Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongodb
+      - redis
   mongodb:
     image: mongodb/mongodb-community-server:latest
     ports:

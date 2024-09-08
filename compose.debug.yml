@@ -1,4 +1,20 @@
 services:
+  ebanx-api:
+    image: liveorder-api:latest
+    build:
+      context: .
+      dockerfile: Luciano.Serafim.Ebanx.Account.Api/Dockerfile
+      args:
+        - configuration=Debug
+    ports:
+      - "8080:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    volumes:
+      - ~/.vsdbg:/remote_debugger:rw
+    depends_on:
+      - mongodb
+      - redis
   mongodb:
     image: mongodb/mongodb-community-server:latest
     ports:
