@@ -20,8 +20,4 @@
     <ProjectReference Include="..\Luciano.Serafim.Ebanx.Account.Infrastructure\Luciano.Serafim.Ebanx.Account.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="MediatR/" />
-  </ItemGroup>
-
 </Project>

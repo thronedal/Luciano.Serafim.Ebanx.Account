@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using Luciano.Serafim.Ebanx.Account.Bootstrap;
 using Luciano.Serafim.Ebanx.Account.Core.Abstractions.Services;
 using Luciano.Serafim.Ebanx.Account.Core.Models;
@@ -12,7 +13,7 @@ public static class TestHelper
     public static IServiceCollection AddEbanxTest(this IServiceCollection services)
     {
         services
-            .AddEbanxMediatR()
+            .AddEbanxMediatR(Assembly.Load("Luciano.Serafim.Ebanx.Account.Tests"))
             .AddLogging()
             .AddEbanxDistributedCache()
             .AddEbanxResponse()

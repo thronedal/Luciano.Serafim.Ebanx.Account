@@ -14,7 +14,7 @@ public class Account
         AccountNumber = accountNumber;
     }
     /// <summary>
-    /// Surrogate Key generated to identify the account, o (zero) indicates a new account
+    /// Surrogate Key generated to identify the account, 0 (zero) indicates a new account
     /// </summary>
     public int Id { get; private set; }
 

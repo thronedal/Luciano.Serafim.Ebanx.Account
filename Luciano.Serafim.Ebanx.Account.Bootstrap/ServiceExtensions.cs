@@ -1,7 +1,9 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Text.Json.Serialization;
 using Luciano.Serafim.Ebanx.Account.Bootstrap.Filters;
+using Luciano.Serafim.Ebanx.Account.Bootstrap.MediatR;
 using Luciano.Serafim.Ebanx.Account.Core.Abstractions.Services;
 using Luciano.Serafim.Ebanx.Account.Core.Models;
 using Luciano.Serafim.Ebanx.Account.Infrastructure;
@@ -14,14 +16,24 @@ using MongoDB.Driver.Core.Configuration;
 
 namespace Luciano.Serafim.Ebanx.Account.Bootstrap;
 
+[ExcludeFromCodeCoverage]
 public static class ServiceExtensions
 {
-    public static IServiceCollection AddEbanxMediatR(this IServiceCollection services)
+    public static IServiceCollection AddEbanxMediatR(this IServiceCollection services, params Assembly[] extraAssemblies)
     {
         Assembly[] assemblies = [Assembly.Load("Luciano.Serafim.Ebanx.Account.Core")];
+
+        if(extraAssemblies.Length > 0)
+        {
+            assemblies = assemblies.Concat(extraAssemblies).ToArray();
+        }
+
         services.AddMediatR(cfg =>
         {
             cfg.RegisterServicesFromAssemblies(assemblies);
+            cfg.AddOpenBehavior(typeof(CachingInvalidationBehaviour<,>));
+            cfg.AddOpenBehavior(typeof(CachingBehaviour<,>));
+            cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
         });
         return services;
     }

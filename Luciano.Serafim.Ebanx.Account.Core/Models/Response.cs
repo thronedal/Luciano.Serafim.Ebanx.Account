@@ -21,24 +21,29 @@ public abstract class Response
     /// <summary>
     /// Response object
     /// </summary>
-    protected object? ResponseObject { get; set; }
+    public object? ResponseObject { get; set; }
 
     /// <summary>
     /// indicates if the call was successful
     /// </summary>
     public bool IsValid { get => Errors.Count == 0; }
 
-    public int Status { get; set; }
-}
+    public int Status { get; set; }    
+    
+    /// <summary>
+    /// Get Response payload
+    /// </summary>
+    public object? GetResponseObject(Type type) => Convert.ChangeType(ResponseObject, type);
 
-public class Response<T> : Response
-{
     /// <summary>
     /// Sets the value for response Object
     /// </summary>
     /// <param name="value"></param>
-    public void SetResponsePayload(T value) => ResponseObject = value;    
-    
+    public void SetResponsePayload(object value) => ResponseObject = value; 
+}
+
+public class Response<T> : Response
+{   
     /// <summary>
     /// Get Response payload
     /// </summary>

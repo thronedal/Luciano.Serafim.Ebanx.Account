@@ -1,5 +1,4 @@
 using Luciano.Serafim.Ebanx.Account.Core.Exceptions.Abstractions;
-using Luciano.Serafim.Ebanx.Account.Core.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
