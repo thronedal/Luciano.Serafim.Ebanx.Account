@@ -5,6 +5,7 @@ using System.Text.Json.Serialization;
 using Luciano.Serafim.Ebanx.Account.Bootstrap.Filters;
 using Luciano.Serafim.Ebanx.Account.Bootstrap.MediatR;
 using Luciano.Serafim.Ebanx.Account.Core.Abstractions.Services;
+using Luciano.Serafim.Ebanx.Account.Core.Abstractions.Transactions;
 using Luciano.Serafim.Ebanx.Account.Core.Models;
 using Luciano.Serafim.Ebanx.Account.Infrastructure;
 using Luciano.Serafim.Ebanx.Account.Infrastructure.MongoDb;
@@ -23,7 +24,7 @@ public static class ServiceExtensions
     {
         Assembly[] assemblies = [Assembly.Load("Luciano.Serafim.Ebanx.Account.Core")];
 
-        if(extraAssemblies.Length > 0)
+        if (extraAssemblies.Length > 0)
         {
             assemblies = assemblies.Concat(extraAssemblies).ToArray();
         }
@@ -31,6 +32,7 @@ public static class ServiceExtensions
         services.AddMediatR(cfg =>
         {
             cfg.RegisterServicesFromAssemblies(assemblies);
+            cfg.AddOpenBehavior(typeof(AcidBehaviour<,>));
             cfg.AddOpenBehavior(typeof(CachingInvalidationBehaviour<,>));
             cfg.AddOpenBehavior(typeof(CachingBehaviour<,>));
             cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
@@ -120,14 +122,17 @@ public static class ServiceExtensions
                 var settings = new MongoClientSettings()
                 {
                     Scheme = ConnectionStringScheme.MongoDB,
-                    Server = new MongoServerAddress(databaseSettings!.Host, databaseSettings.Port)
+                    Server = new MongoServerAddress(databaseSettings!.Host, databaseSettings.Port),
+                    RetryWrites = false,
+                    RetryReads = false
                 };
 
                 return new MongoClient(settings);
             });
 
-            services.AddSingleton<IAccountService, Infrastructure.MongoDb.AccountService>();
-            services.AddSingleton<IEventService, Infrastructure.MongoDb.EventService>();
+            services.AddScoped<IUnitOfWork, Infrastructure.MongoDb.UnitOfWork>();
+            services.AddScoped<IAccountService, Infrastructure.MongoDb.AccountService>();
+            services.AddScoped<IEventService, Infrastructure.MongoDb.EventService>();
 
             Mapping.MapEntities();
         }

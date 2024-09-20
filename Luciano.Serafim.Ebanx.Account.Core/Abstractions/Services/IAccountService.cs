@@ -10,7 +10,7 @@ public interface IAccountService
 {
 
     /// <summary>
-    /// initialize the app state, for testinf purposes when using in memory storage
+    /// initialize the app state, for testing purposes when using in memory storage
     /// </summary>
     /// <returns></returns>
     Task<bool> InitializeState();

@@ -1,9 +1,10 @@
+using Luciano.Serafim.Ebanx.Account.Core.Abstractions.Transactions;
 using Luciano.Serafim.Ebanx.Account.Core.Models;
 using MediatR;
 
 namespace Luciano.Serafim.Ebanx.Account.Core.UseCases.Events;
 
-public class TransferCommand : IRequest<Response<TransferResponse>>
+public class TransferCommand : IRequest<Response<TransferResponse>>, IAcidEnabled
 {
     public TransferCommand(int originId, int destinationId, double amount)
     {
