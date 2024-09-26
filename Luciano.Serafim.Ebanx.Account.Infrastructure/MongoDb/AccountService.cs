@@ -1,8 +1,6 @@
-using System;
 using Luciano.Serafim.Ebanx.Account.Core.Abstractions.Services;
 using Luciano.Serafim.Ebanx.Account.Core.Abstractions.Transactions;
 using Luciano.Serafim.Ebanx.Account.Core.Models;
-using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
 namespace Luciano.Serafim.Ebanx.Account.Infrastructure.MongoDb;
@@ -13,11 +11,11 @@ public class AccountService : IAccountService
     private IMongoCollection<AccountConsolidatedBalance> consolidatedBalanceCollection;
     private readonly IUnitOfWork unitOfWork;
 
-    public AccountService(IOptions<MongoDBSettings> databaseSettings, IMongoClient mongoClient, IUnitOfWork unitOfWork)
+    public AccountService(IMongoClient mongoClient, IUnitOfWork unitOfWork)
     {
-        var mongoDatabase = mongoClient.GetDatabase(databaseSettings.Value.DatabaseName);
-        accountsCollection = mongoDatabase.GetCollection<Core.Models.Account>("accounts");
-        consolidatedBalanceCollection = mongoDatabase.GetCollection<AccountConsolidatedBalance>("accountConsolidatedBalance");
+        var mongoDatabase = mongoClient.GetDatabase(Utils.ACCOUNT_DATABASE_NAME);
+        accountsCollection = mongoDatabase.GetCollection<Core.Models.Account>(Utils.ACCOUNT_COLLECTIION_NAME);
+        consolidatedBalanceCollection = mongoDatabase.GetCollection<AccountConsolidatedBalance>(Utils.ACCOUNT_CONSOLIDATED_BALANCE_COLLECTIION_NAME);
         this.unitOfWork = unitOfWork;
     }
 

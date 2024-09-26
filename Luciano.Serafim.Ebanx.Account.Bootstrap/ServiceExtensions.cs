@@ -107,25 +107,21 @@ public static class ServiceExtensions
 
     public static IServiceCollection AddEbanxServices(this IServiceCollection services, ConfigurationManager configuration)
     {
-        var databaseSettings = configuration.GetSection("MongoDb").Get<MongoDBSettings>();
+        var accountDatabase = configuration.GetConnectionString("AccountDatabase");
 
-        if (databaseSettings is null)
+        //var databaseSettings = configuration.GetSection("MongoDb").Get<MongoDBSettings>();
+
+        if (accountDatabase is null)
         {
+            services.AddScoped<IUnitOfWork, Infrastructure.UnitOfWork>();
             services.AddSingleton<IAccountService, Infrastructure.AccountService>();
             services.AddSingleton<IEventService, Infrastructure.EventService>();
         }
         else
         {
-            services.Configure<MongoDBSettings>(configuration.GetSection("MongoDb"));
             services.AddSingleton<IMongoClient>(sp =>
             {
-                var settings = new MongoClientSettings()
-                {
-                    Scheme = ConnectionStringScheme.MongoDB,
-                    Server = new MongoServerAddress(databaseSettings!.Host, databaseSettings.Port),
-                    RetryWrites = false,
-                    RetryReads = false
-                };
+                var settings = MongoClientSettings.FromConnectionString(accountDatabase);
 
                 return new MongoClient(settings);
             });

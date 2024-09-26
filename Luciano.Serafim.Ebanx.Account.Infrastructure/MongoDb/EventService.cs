@@ -1,7 +1,6 @@
 using Luciano.Serafim.Ebanx.Account.Core.Abstractions.Services;
 using Luciano.Serafim.Ebanx.Account.Core.Models;
 using MongoDB.Driver;
-using Microsoft.Extensions.Options;
 using Luciano.Serafim.Ebanx.Account.Core.Abstractions.Transactions;
 
 namespace Luciano.Serafim.Ebanx.Account.Infrastructure.MongoDb;
@@ -11,10 +10,10 @@ public class EventService : IEventService
     private IMongoCollection<Event> eventsCollection;
     private readonly IUnitOfWork unitOfWork;
 
-    public EventService(IOptions<MongoDBSettings> databaseSettings, IMongoClient mongoClient, IUnitOfWork unitOfWork)
+    public EventService(IMongoClient mongoClient, IUnitOfWork unitOfWork)
     {
-        var mongoDatabase = mongoClient.GetDatabase(databaseSettings.Value.DatabaseName);
-        eventsCollection = mongoDatabase.GetCollection<Event>("events");
+        var mongoDatabase = mongoClient.GetDatabase(Utils.ACCOUNT_DATABASE_NAME);
+        eventsCollection = mongoDatabase.GetCollection<Event>(Utils.EVENT_COLLECTION_NAME);
         this.unitOfWork = unitOfWork;
     }
 
