@@ -12,6 +12,7 @@ using Luciano.Serafim.Ebanx.Account.Infrastructure.MongoDb;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using MongoDB.Driver.Core.Configuration;
 
@@ -109,8 +110,6 @@ public static class ServiceExtensions
     {
         var accountDatabase = configuration.GetConnectionString("AccountDatabase");
 
-        //var databaseSettings = configuration.GetSection("MongoDb").Get<MongoDBSettings>();
-
         if (accountDatabase is null)
         {
             services.AddScoped<IUnitOfWork, Infrastructure.UnitOfWork>();
@@ -122,7 +121,7 @@ public static class ServiceExtensions
             services.AddSingleton<IMongoClient>(sp =>
             {
                 var settings = MongoClientSettings.FromConnectionString(accountDatabase);
-
+                settings.LoggingSettings = new LoggingSettings(sp.GetService<ILoggerFactory>());
                 return new MongoClient(settings);
             });
 

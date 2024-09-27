@@ -18,33 +18,23 @@ public class CreateAccountUseCase : IRequestHandler<CreateAccountCommand, Respon
     }
     public async Task<Response<Models.Account>> Handle(CreateAccountCommand request, CancellationToken cancellationToken)
     {
-        //begin transaction
-        try
+
+        //check if account exists
+        bool exists = await accountService.AccountExists(request.AccountId);
+
+        if (exists)
         {
-            //check if account exists
-            bool exists = await accountService.AccountExists(request.AccountId);
-
-            if (exists)
-            { 
-                throw new BussinessRuleException($"Account Id '{request.AccountId}' already exist and can not be created");
-            }
-
-            //creates account
-            Models.Account account = (Models.Account)request;
-            account = await accountService.CreateAccount(account);
-
-            //consolidate initial balance (0)
-            AccountConsolidatedBalance consolidatedBalance = await accountService.ConsolidateBalance(account, DateOnly.FromDateTime(DateTime.UtcNow), 0.0);
-
-            //commits transaction
-
-            response.SetResponsePayload(account);
+            throw new BussinessRuleException($"Account Id '{request.AccountId}' already exist and can not be created");
         }
-        catch
-        {
-            //rollback transaction
-            throw;
-        }
+
+        //creates account
+        Models.Account account = (Models.Account)request;
+        account = await accountService.CreateAccount(account);
+
+        //consolidate initial balance (0)
+        AccountConsolidatedBalance consolidatedBalance = await accountService.ConsolidateBalance(account, DateOnly.FromDateTime(DateTime.UtcNow), 0.0);
+        response.SetResponsePayload(account);
+
         return response;
     }
 }

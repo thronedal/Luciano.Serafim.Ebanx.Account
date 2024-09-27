@@ -1,9 +1,10 @@
+using Luciano.Serafim.Ebanx.Account.Core.Abstractions.Transactions;
 using Luciano.Serafim.Ebanx.Account.Core.Models;
 using MediatR;
 
 namespace Luciano.Serafim.Ebanx.Account.Core.UseCases.Accounts;
 
-public class CreateAccountCommand : IRequest<Response<Models.Account>>
+public class CreateAccountCommand : IRequest<Response<Models.Account>>, IAcidEnabled
 {
     public CreateAccountCommand(int accountId)
     {

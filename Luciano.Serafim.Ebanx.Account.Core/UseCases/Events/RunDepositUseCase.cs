@@ -23,35 +23,21 @@ public class RunDepositUseCase : IRequestHandler<DepositCommand, Response<Deposi
     }
     public async Task<Response<DepositResponse>> Handle(DepositCommand request, CancellationToken cancellationToken)
     {
-        //start transaction (should account be locked ??)
-        try
+        //get destination Account
+        var destination = await accountService.GetAccountById(request.DestinationId);
+
+        //if account does not exists then create account
+        if (destination is null)
         {
-            //get destination Account
-            var destination = await accountService.GetAccountById(request.DestinationId);
-
-            //if account does not exists then create account
-            if (destination is null)
-            {
-                destination = (await mediator.Send(new CreateAccountCommand(request.DestinationId))).GetResponseObject();
-            }
-
-            //add ammount to destination
-            var deposit = (Event)request;
-
-            //add ammount to destination
-            deposit = await eventService.CreateEvent(deposit);
-
-            //commit transaction
+            destination = (await mediator.Send(new CreateAccountCommand(request.DestinationId))).GetResponseObject();
         }
-        catch
-        {
-            //rollback transaction on error
-            throw;
-        }
-        finally
-        {
-            //(release account lock??)
-        }
+
+        //add ammount to destination
+        var deposit = (Event)request;
+
+        //add ammount to destination
+        deposit = await eventService.CreateEvent(deposit);
+
 
         //get destination balance
         var destinationBalance = (await mediator.Send(new GetBalanceQuery(request.DestinationId))).GetResponseObject();

@@ -24,43 +24,29 @@ public class RunWithdrawUseCase : IRequestHandler<WithdrawCommand, Response<With
 
     public async Task<Response<WithdrawResponse>> Handle(WithdrawCommand request, CancellationToken cancellationToken)
     {
-        //start transaction (should account be locked ??)
-        try
+
+        //get origin account 
+        var origin = await accountService.GetAccountById(request.OriginId);
+
+        //if account does not exists throws error
+        if (origin is null)
         {
-            //get origin account 
-            var origin = await accountService.GetAccountById(request.OriginId);
-
-            //if account does not exists throws error
-            if (origin is null)
-            {
-                throw new ObjectNotFoundException("404", request.OriginId.ToString(), nameof(request.OriginId));
-            }
-
-            //calculate balance
-            var balance = (await mediator.Send(new GetBalanceQuery(origin.Id))).GetResponseObject();
-
-            //validate origin balance
-            if (balance < request.Amount)
-            {
-                throw new BussinessRuleException($"Balance '{balance:C2}' should be higher than the operation amount $'{request.Amount:C2}'");
-            }
-
-            var withdraw = (Event)request;
-
-            //remove ammount from origin
-            withdraw = await eventService.CreateEvent(withdraw);
-
-            //commit transaction 
+            throw new ObjectNotFoundException("404", request.OriginId.ToString(), nameof(request.OriginId));
         }
-        catch
+
+        //calculate balance
+        var balance = (await mediator.Send(new GetBalanceQuery(origin.Id))).GetResponseObject();
+
+        //validate origin balance
+        if (balance < request.Amount)
         {
-            //rollback transaction on error
-            throw;
+            throw new BussinessRuleException($"Balance '{balance:C2}' should be higher than the operation amount $'{request.Amount:C2}'");
         }
-        finally
-        {
-            //(release account lock??)
-        }
+
+        var withdraw = (Event)request;
+
+        //remove ammount from origin
+        withdraw = await eventService.CreateEvent(withdraw);
 
         //get origin balance
         var originBalance = (await mediator.Send(new GetBalanceQuery(request.OriginId))).GetResponseObject();

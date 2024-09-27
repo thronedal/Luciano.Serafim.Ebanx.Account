@@ -25,58 +25,45 @@ public class RunTransferUseCase : IRequestHandler<TransferCommand, Response<Tran
 
     public async Task<Response<TransferResponse>> Handle(TransferCommand request, CancellationToken cancellationToken)
     {
-        //start transaction (should account be locked ??)
-        try
+        //get origin account 
+        var origin = await accountService.GetAccountById(request.OriginId);
+
+        //if account does not exists throws error
+        if (origin is null)
         {
-            //get origin account 
-            var origin = await accountService.GetAccountById(request.OriginId);
-
-            //if account does not exists throws error
-            if (origin is null)
-            {
-                throw new ObjectNotFoundException("404", request.OriginId.ToString(), nameof(request.OriginId));
-            }
-
-            //get destination Account
-            var destination = await accountService.GetAccountById(request.DestinationId);
-
-            //if account does not exists throws error
-            if (destination is null)
-            {
-                throw new ObjectNotFoundException("404", request.DestinationId.ToString(), nameof(request.DestinationId));
-            }
-
-            //calculate balance
-            var balance = (await mediator.Send(new GetBalanceQuery(origin.Id))).GetResponseObject();
-
-            //validate origin balance
-            if (balance < request.Amount)
-            {
-                throw new BussinessRuleException($"Balance '{balance:C2}' should be higher than the operation amount '${request.Amount:C2}'");
-            }
-
-            var transfeEvents = (Event[])request;
-            var outgoingTransfer = transfeEvents[0];
-            var incommingTransfer = transfeEvents[1];
-
-            //remove ammount from origin
-            outgoingTransfer = await eventService.CreateEvent(outgoingTransfer);
-
-            //add ammount to destination
-            incommingTransfer.OriginEventId = outgoingTransfer.Id;
-            incommingTransfer = await eventService.CreateEvent(incommingTransfer);
-
-            //commit transaction 
+            throw new ObjectNotFoundException("404", request.OriginId.ToString(), nameof(request.OriginId));
         }
-        catch
+
+        //get destination Account
+        var destination = await accountService.GetAccountById(request.DestinationId);
+
+        //if account does not exists throws error
+        if (destination is null)
         {
-            //rollback transaction on error
-            throw;
+            throw new ObjectNotFoundException("404", request.DestinationId.ToString(), nameof(request.DestinationId));
         }
-        finally
+
+        //calculate balance
+        var balance = (await mediator.Send(new GetBalanceQuery(origin.Id))).GetResponseObject();
+
+        //validate origin balance
+        if (balance < request.Amount)
         {
-            //(release account lock??)
+            throw new BussinessRuleException($"Balance '{balance:C2}' should be higher than the operation amount '${request.Amount:C2}'");
         }
+
+        var transfeEvents = (Event[])request;
+        var outgoingTransfer = transfeEvents[0];
+        var incommingTransfer = transfeEvents[1];
+
+        //remove ammount from origin
+        outgoingTransfer = await eventService.CreateEvent(outgoingTransfer);
+
+        //add ammount to destination
+        incommingTransfer.OriginEventId = outgoingTransfer.Id;
+        incommingTransfer = await eventService.CreateEvent(incommingTransfer);
+
+
 
         //get origin balance
         var originBalance = (await mediator.Send(new GetBalanceQuery(request.OriginId))).GetResponseObject();

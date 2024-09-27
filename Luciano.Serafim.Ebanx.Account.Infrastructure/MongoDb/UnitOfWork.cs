@@ -4,8 +4,17 @@ using MongoDB.Driver;
 
 namespace Luciano.Serafim.Ebanx.Account.Infrastructure.MongoDb;
 
+/// <summary>
+/// Suport ACID for MongoDB
+/// </summary>
+/// <remarks>
+/// MongoDB do not suport nested transactions, if a new transaction is asked inside a existing one, 
+/// a counter will be added but no nested transaction will be created. 
+/// This counter will be used to control the commit / rollback.
+/// </remarks>
 public class UnitOfWork : IUnitOfWork
 {
+    private int transactionLevel = 0;
     private bool isTransactionActive { get { return session.IsInTransaction; } }
     private bool disposed;
     private readonly IClientSessionHandle session;
@@ -20,11 +29,12 @@ public class UnitOfWork : IUnitOfWork
     /// <inheritdoc/>
     public async Task CommitTransactionAsync()
     {
-        if (isTransactionActive)
+        if (isTransactionActive && transactionLevel == 1)
         {
             logger.LogInformation("Commit transaction Id: {id}", session.ServerSession.Id);
             await session.CommitTransactionAsync();
         }
+        transactionLevel--;
     }
 
     /// <inheritdoc/>
@@ -46,7 +56,10 @@ public class UnitOfWork : IUnitOfWork
 
         if (disposing)
         {
-            RollbackTransactionAsync().Wait();
+            while (transactionLevel > 0)
+            {
+                RollbackTransactionAsync().Wait();
+            }
 
             // TODO: dispose managed state (managed objects).
 
@@ -62,20 +75,21 @@ public class UnitOfWork : IUnitOfWork
     /// <inheritdoc/>
     public async Task RollbackTransactionAsync()
     {
-        if (isTransactionActive)
+        if (isTransactionActive && transactionLevel == 1)
         {
             logger.LogInformation("Abort transaction Id: {id}", session.ServerSession.Id);
             await session.AbortTransactionAsync();
         }
+        transactionLevel--;
     }
 
     /// <inheritdoc/>
     public async Task StartTransactionAsync()
     {
-        //TODO: add suport to nested transactions
-
         session.StartTransaction();
         logger.LogInformation("Start transaction Id: {id}", session.ServerSession.Id);
+
+        transactionLevel++;
         await Task.CompletedTask;
     }
 

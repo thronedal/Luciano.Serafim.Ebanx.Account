@@ -2,6 +2,7 @@ using System;
 using System.Reflection;
 using Luciano.Serafim.Ebanx.Account.Bootstrap;
 using Luciano.Serafim.Ebanx.Account.Core.Abstractions.Services;
+using Luciano.Serafim.Ebanx.Account.Core.Abstractions.Transactions;
 using Luciano.Serafim.Ebanx.Account.Core.Models;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
@@ -18,7 +19,8 @@ public static class TestHelper
             .AddEbanxDistributedCache()
             .AddEbanxResponse()
             .AddEbanxAccountService()
-            .AddEbanxEventService();
+            .AddEbanxEventService()
+            .AddScoped(_=> Substitute.For<IUnitOfWork>());
 
         return services;
     }
