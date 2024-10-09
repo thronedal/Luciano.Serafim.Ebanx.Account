@@ -4,6 +4,8 @@ using Luciano.Serafim.Ebanx.Account.Bootstrap;
 using Luciano.Serafim.Ebanx.Account.Core.Abstractions.Services;
 using Luciano.Serafim.Ebanx.Account.Core.Abstractions.Transactions;
 using Luciano.Serafim.Ebanx.Account.Core.Models;
+using Medallion.Threading;
+using Medallion.Threading.FileSystem;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 
@@ -20,6 +22,7 @@ public static class TestHelper
             .AddEbanxResponse()
             .AddEbanxAccountService()
             .AddEbanxEventService()
+            .AddDistributedLockTest()
             .AddScoped(_=> Substitute.For<IUnitOfWork>());
 
         return services;
@@ -110,6 +113,15 @@ public static class TestHelper
 
                 return service;
             });
+
+        return services;
+    }
+
+    
+    public static IServiceCollection AddDistributedLockTest(this IServiceCollection services)
+    {
+        //for testing purposes, file lock is configured
+        services.AddSingleton<IDistributedLockProvider>(_ => new FileDistributedSynchronizationProvider(new DirectoryInfo(Environment.CurrentDirectory)));
 
         return services;
     }

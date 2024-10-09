@@ -13,6 +13,7 @@
   <ItemGroup>
     <PackageReference Include="mediatr" Version="12.4.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+    <PackageReference Include="DistributedLock.Redis" Version="1.0.3" />
   </ItemGroup>
 
   <ItemGroup>

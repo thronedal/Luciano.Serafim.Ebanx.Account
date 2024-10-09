@@ -1,4 +1,3 @@
-using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Text.Json.Serialization;
@@ -7,14 +6,16 @@ using Luciano.Serafim.Ebanx.Account.Bootstrap.MediatR;
 using Luciano.Serafim.Ebanx.Account.Core.Abstractions.Services;
 using Luciano.Serafim.Ebanx.Account.Core.Abstractions.Transactions;
 using Luciano.Serafim.Ebanx.Account.Core.Models;
-using Luciano.Serafim.Ebanx.Account.Infrastructure;
 using Luciano.Serafim.Ebanx.Account.Infrastructure.MongoDb;
+using Medallion.Threading;
+using Medallion.Threading.Redis;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using MongoDB.Driver.Core.Configuration;
+using StackExchange.Redis;
 
 namespace Luciano.Serafim.Ebanx.Account.Bootstrap;
 
@@ -33,6 +34,7 @@ public static class ServiceExtensions
         services.AddMediatR(cfg =>
         {
             cfg.RegisterServicesFromAssemblies(assemblies);
+            cfg.AddOpenBehavior(typeof(LockingBehaviour<,>));
             cfg.AddOpenBehavior(typeof(AcidBehaviour<,>));
             cfg.AddOpenBehavior(typeof(CachingInvalidationBehaviour<,>));
             cfg.AddOpenBehavior(typeof(CachingBehaviour<,>));
@@ -145,7 +147,20 @@ public static class ServiceExtensions
             .AddEbanxControllers()
             .AddEbanxSwagger()
             .AddEbanxResponse()
+            .AddDistributedLock(configuration)
             .AddEbanxServices(configuration);
+
+        return services;
+    }
+
+    public static IServiceCollection AddDistributedLock(this IServiceCollection services, ConfigurationManager configuration)
+    {
+        //connection string format: https://stackexchange.github.io/StackExchange.Redis/Configuration.html
+        var connectionString = configuration.GetConnectionString("DistributedLock");
+        var options = ConfigurationOptions.Parse(connectionString);
+        var conn = ConnectionMultiplexer.Connect(options);
+
+        services.AddSingleton<IDistributedLockProvider>(_ => new RedisDistributedSynchronizationProvider(conn.GetDatabase()));
 
         return services;
     }
